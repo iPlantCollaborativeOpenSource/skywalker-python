@@ -52,3 +52,9 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Thrift
+gen-py*/
+
+# this project
+skywalker.thrift
