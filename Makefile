@@ -1,6 +1,6 @@
 .DEFAULT_GOAL =	all
 
-.PHONY =	all clean wget gen gen-twisted copy copy-twisted
+.PHONY =	all clean clean-autogen clean-gen wget gen gen-thrift copy copy-gen
 
 LOC	=	https://raw.githubusercontent.com/iPlantCollaborativeOpenSource/skywalker.thrift/master/skywalker.thrift
 IDL_FILE =	./skywalker.thrift
@@ -10,27 +10,39 @@ COPY	=	cp
 CHOWN	=	chown
 USER	=	root
 GROUP	=	root
+GENLANG	=	py
+ifdef GENTYPE
+	GENNAME = $(GENLANG):$(GENTYPE)
+	GENDIR	= gen-$(GENLANG).$(GENTYPE)
+else
+	GENNAME = $(GENLANG)
+	GENDIR = gen-$(GENLANG)
+endif
 
 all : wget gen copy
 
-clean :
+clean : clean-gen clean-autogen
+
+clean-autogen :
 	rm -rf ./build
-	rm -rf ./gen-py.twisted
 	rm -rf ./skywalker
+
+clean-gen :
+	rm -rf ./$(GENDIR)
 	rm -f ./skywalker.thrift
 
 wget :
 	$(WGET) -O $(IDL_FILE) $(LOC)
 
-gen : gen-twisted
+gen : gen-thrift
 
-gen-twisted :
-	$(THRIFT) --gen py:twisted ./skywalker.thrift
+gen-thrift :
+	$(THRIFT) --gen $(GENNAME) ./skywalker.thrift
 
-copy : copy-twisted
+copy : copy-gen
 
-copy-twisted :
-	$(COPY) -r gen-py.twisted/skywalker ./skywalker
+copy-gen :
+	$(COPY) -r $(GENDIR)/skywalker/ ./skywalker
 
 chown :
 	$(CHOWN) -R $(USER):$(GROUP) .

@@ -3,7 +3,7 @@
 #
 # DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
 #
-#  options string: py:twisted
+#  options string: py
 #
 
 from thrift.Thrift import TType, TMessageType, TException, TApplicationException
@@ -16,172 +16,21 @@ try:
 except:
   fastbinary = None
 
-from zope.interface import Interface, implements
-from twisted.internet import defer
-from thrift.transport import TTwisted
 
-class Iface(Interface):
-  def get_provider_hash(provider):
-    """
-    Parameters:
-     - provider
-    """
-    pass
-
-  def get_identity_hash(identity):
-    """
-    Parameters:
-     - identity
-    """
-    pass
-
-  def get_instance(provider_hash, identity_hash, instance_uuid):
-    """
-    Parameters:
-     - provider_hash
-     - identity_hash
-     - instance_uuid
-    """
-    pass
-
-  def list_instances(provider_hash, identity_hash):
-    """
-    Parameters:
-     - provider_hash
-     - identity_hash
-    """
-    pass
-
-  def create_instance(provider_hash, identity_hash, options):
-    """
-    Parameters:
-     - provider_hash
-     - identity_hash
-     - options
-    """
-    pass
-
-  def deploy_to_instance(provider_hash, identity_hash, options):
-    """
-    Parameters:
-     - provider_hash
-     - identity_hash
-     - options
-    """
-    pass
-
-  def destroy_instance(provider_hash, identity_hash, instance_uuid):
-    """
-    Parameters:
-     - provider_hash
-     - identity_hash
-     - instance_uuid
-    """
-    pass
-
-
-class Client:
-  implements(Iface)
-
-  def __init__(self, transport, oprot_factory):
-    self._transport = transport
-    self._oprot_factory = oprot_factory
-    self._seqid = 0
-    self._reqs = {}
-
+class Iface:
   def get_provider_hash(self, provider):
     """
     Parameters:
      - provider
     """
-    seqid = self._seqid = self._seqid + 1
-    self._reqs[seqid] = defer.Deferred()
-
-    d = defer.maybeDeferred(self.send_get_provider_hash, provider)
-    d.addCallbacks(
-      callback=self.cb_send_get_provider_hash,
-      callbackArgs=(seqid,),
-      errback=self.eb_send_get_provider_hash,
-      errbackArgs=(seqid,))
-    return d
-
-  def cb_send_get_provider_hash(self, _, seqid):
-    return self._reqs[seqid]
-
-  def eb_send_get_provider_hash(self, f, seqid):
-    d = self._reqs.pop(seqid)
-    d.errback(f)
-    return d
-
-  def send_get_provider_hash(self, provider):
-    oprot = self._oprot_factory.getProtocol(self._transport)
-    oprot.writeMessageBegin('get_provider_hash', TMessageType.CALL, self._seqid)
-    args = get_provider_hash_args()
-    args.provider = provider
-    args.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
-
-  def recv_get_provider_hash(self, iprot, mtype, rseqid):
-    d = self._reqs.pop(rseqid)
-    if mtype == TMessageType.EXCEPTION:
-      x = TApplicationException()
-      x.read(iprot)
-      iprot.readMessageEnd()
-      return d.errback(x)
-    result = get_provider_hash_result()
-    result.read(iprot)
-    iprot.readMessageEnd()
-    if result.success is not None:
-      return d.callback(result.success)
-    return d.errback(TApplicationException(TApplicationException.MISSING_RESULT, "get_provider_hash failed: unknown result"))
+    pass
 
   def get_identity_hash(self, identity):
     """
     Parameters:
      - identity
     """
-    seqid = self._seqid = self._seqid + 1
-    self._reqs[seqid] = defer.Deferred()
-
-    d = defer.maybeDeferred(self.send_get_identity_hash, identity)
-    d.addCallbacks(
-      callback=self.cb_send_get_identity_hash,
-      callbackArgs=(seqid,),
-      errback=self.eb_send_get_identity_hash,
-      errbackArgs=(seqid,))
-    return d
-
-  def cb_send_get_identity_hash(self, _, seqid):
-    return self._reqs[seqid]
-
-  def eb_send_get_identity_hash(self, f, seqid):
-    d = self._reqs.pop(seqid)
-    d.errback(f)
-    return d
-
-  def send_get_identity_hash(self, identity):
-    oprot = self._oprot_factory.getProtocol(self._transport)
-    oprot.writeMessageBegin('get_identity_hash', TMessageType.CALL, self._seqid)
-    args = get_identity_hash_args()
-    args.identity = identity
-    args.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
-
-  def recv_get_identity_hash(self, iprot, mtype, rseqid):
-    d = self._reqs.pop(rseqid)
-    if mtype == TMessageType.EXCEPTION:
-      x = TApplicationException()
-      x.read(iprot)
-      iprot.readMessageEnd()
-      return d.errback(x)
-    result = get_identity_hash_result()
-    result.read(iprot)
-    iprot.readMessageEnd()
-    if result.success is not None:
-      return d.callback(result.success)
-    return d.errback(TApplicationException(TApplicationException.MISSING_RESULT, "get_identity_hash failed: unknown result"))
+    pass
 
   def get_instance(self, provider_hash, identity_hash, instance_uuid):
     """
@@ -190,49 +39,7 @@ class Client:
      - identity_hash
      - instance_uuid
     """
-    seqid = self._seqid = self._seqid + 1
-    self._reqs[seqid] = defer.Deferred()
-
-    d = defer.maybeDeferred(self.send_get_instance, provider_hash, identity_hash, instance_uuid)
-    d.addCallbacks(
-      callback=self.cb_send_get_instance,
-      callbackArgs=(seqid,),
-      errback=self.eb_send_get_instance,
-      errbackArgs=(seqid,))
-    return d
-
-  def cb_send_get_instance(self, _, seqid):
-    return self._reqs[seqid]
-
-  def eb_send_get_instance(self, f, seqid):
-    d = self._reqs.pop(seqid)
-    d.errback(f)
-    return d
-
-  def send_get_instance(self, provider_hash, identity_hash, instance_uuid):
-    oprot = self._oprot_factory.getProtocol(self._transport)
-    oprot.writeMessageBegin('get_instance', TMessageType.CALL, self._seqid)
-    args = get_instance_args()
-    args.provider_hash = provider_hash
-    args.identity_hash = identity_hash
-    args.instance_uuid = instance_uuid
-    args.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
-
-  def recv_get_instance(self, iprot, mtype, rseqid):
-    d = self._reqs.pop(rseqid)
-    if mtype == TMessageType.EXCEPTION:
-      x = TApplicationException()
-      x.read(iprot)
-      iprot.readMessageEnd()
-      return d.errback(x)
-    result = get_instance_result()
-    result.read(iprot)
-    iprot.readMessageEnd()
-    if result.success is not None:
-      return d.callback(result.success)
-    return d.errback(TApplicationException(TApplicationException.MISSING_RESULT, "get_instance failed: unknown result"))
+    pass
 
   def list_instances(self, provider_hash, identity_hash):
     """
@@ -240,52 +47,7 @@ class Client:
      - provider_hash
      - identity_hash
     """
-    seqid = self._seqid = self._seqid + 1
-    self._reqs[seqid] = defer.Deferred()
-
-    d = defer.maybeDeferred(self.send_list_instances, provider_hash, identity_hash)
-    d.addCallbacks(
-      callback=self.cb_send_list_instances,
-      callbackArgs=(seqid,),
-      errback=self.eb_send_list_instances,
-      errbackArgs=(seqid,))
-    return d
-
-  def cb_send_list_instances(self, _, seqid):
-    return self._reqs[seqid]
-
-  def eb_send_list_instances(self, f, seqid):
-    d = self._reqs.pop(seqid)
-    d.errback(f)
-    return d
-
-  def send_list_instances(self, provider_hash, identity_hash):
-    oprot = self._oprot_factory.getProtocol(self._transport)
-    oprot.writeMessageBegin('list_instances', TMessageType.CALL, self._seqid)
-    args = list_instances_args()
-    args.provider_hash = provider_hash
-    args.identity_hash = identity_hash
-    args.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
-
-  def recv_list_instances(self, iprot, mtype, rseqid):
-    d = self._reqs.pop(rseqid)
-    if mtype == TMessageType.EXCEPTION:
-      x = TApplicationException()
-      x.read(iprot)
-      iprot.readMessageEnd()
-      return d.errback(x)
-    result = list_instances_result()
-    result.read(iprot)
-    iprot.readMessageEnd()
-    if result.success is not None:
-      return d.callback(result.success)
-    if result.oex is not None:
-      return d.errback(result.oex)
-    if result.cex is not None:
-      return d.errback(result.cex)
-    return d.errback(TApplicationException(TApplicationException.MISSING_RESULT, "list_instances failed: unknown result"))
+    pass
 
   def create_instance(self, provider_hash, identity_hash, options):
     """
@@ -294,49 +56,7 @@ class Client:
      - identity_hash
      - options
     """
-    seqid = self._seqid = self._seqid + 1
-    self._reqs[seqid] = defer.Deferred()
-
-    d = defer.maybeDeferred(self.send_create_instance, provider_hash, identity_hash, options)
-    d.addCallbacks(
-      callback=self.cb_send_create_instance,
-      callbackArgs=(seqid,),
-      errback=self.eb_send_create_instance,
-      errbackArgs=(seqid,))
-    return d
-
-  def cb_send_create_instance(self, _, seqid):
-    return self._reqs[seqid]
-
-  def eb_send_create_instance(self, f, seqid):
-    d = self._reqs.pop(seqid)
-    d.errback(f)
-    return d
-
-  def send_create_instance(self, provider_hash, identity_hash, options):
-    oprot = self._oprot_factory.getProtocol(self._transport)
-    oprot.writeMessageBegin('create_instance', TMessageType.CALL, self._seqid)
-    args = create_instance_args()
-    args.provider_hash = provider_hash
-    args.identity_hash = identity_hash
-    args.options = options
-    args.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
-
-  def recv_create_instance(self, iprot, mtype, rseqid):
-    d = self._reqs.pop(rseqid)
-    if mtype == TMessageType.EXCEPTION:
-      x = TApplicationException()
-      x.read(iprot)
-      iprot.readMessageEnd()
-      return d.errback(x)
-    result = create_instance_result()
-    result.read(iprot)
-    iprot.readMessageEnd()
-    if result.success is not None:
-      return d.callback(result.success)
-    return d.errback(TApplicationException(TApplicationException.MISSING_RESULT, "create_instance failed: unknown result"))
+    pass
 
   def deploy_to_instance(self, provider_hash, identity_hash, options):
     """
@@ -345,55 +65,7 @@ class Client:
      - identity_hash
      - options
     """
-    seqid = self._seqid = self._seqid + 1
-    self._reqs[seqid] = defer.Deferred()
-
-    d = defer.maybeDeferred(self.send_deploy_to_instance, provider_hash, identity_hash, options)
-    d.addCallbacks(
-      callback=self.cb_send_deploy_to_instance,
-      callbackArgs=(seqid,),
-      errback=self.eb_send_deploy_to_instance,
-      errbackArgs=(seqid,))
-    return d
-
-  def cb_send_deploy_to_instance(self, _, seqid):
-    return self._reqs[seqid]
-
-  def eb_send_deploy_to_instance(self, f, seqid):
-    d = self._reqs.pop(seqid)
-    d.errback(f)
-    return d
-
-  def send_deploy_to_instance(self, provider_hash, identity_hash, options):
-    oprot = self._oprot_factory.getProtocol(self._transport)
-    oprot.writeMessageBegin('deploy_to_instance', TMessageType.CALL, self._seqid)
-    args = deploy_to_instance_args()
-    args.provider_hash = provider_hash
-    args.identity_hash = identity_hash
-    args.options = options
-    args.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
-
-  def recv_deploy_to_instance(self, iprot, mtype, rseqid):
-    d = self._reqs.pop(rseqid)
-    if mtype == TMessageType.EXCEPTION:
-      x = TApplicationException()
-      x.read(iprot)
-      iprot.readMessageEnd()
-      return d.errback(x)
-    result = deploy_to_instance_result()
-    result.read(iprot)
-    iprot.readMessageEnd()
-    if result.success is not None:
-      return d.callback(result.success)
-    if result.oex is not None:
-      return d.errback(result.oex)
-    if result.cex is not None:
-      return d.errback(result.cex)
-    if result.dex is not None:
-      return d.errback(result.dex)
-    return d.errback(TApplicationException(TApplicationException.MISSING_RESULT, "deploy_to_instance failed: unknown result"))
+    pass
 
   def destroy_instance(self, provider_hash, identity_hash, instance_uuid):
     """
@@ -402,58 +74,267 @@ class Client:
      - identity_hash
      - instance_uuid
     """
-    seqid = self._seqid = self._seqid + 1
-    self._reqs[seqid] = defer.Deferred()
+    pass
 
-    d = defer.maybeDeferred(self.send_destroy_instance, provider_hash, identity_hash, instance_uuid)
-    d.addCallbacks(
-      callback=self.cb_send_destroy_instance,
-      callbackArgs=(seqid,),
-      errback=self.eb_send_destroy_instance,
-      errbackArgs=(seqid,))
-    return d
 
-  def cb_send_destroy_instance(self, _, seqid):
-    return self._reqs[seqid]
+class Client(Iface):
+  def __init__(self, iprot, oprot=None):
+    self._iprot = self._oprot = iprot
+    if oprot is not None:
+      self._oprot = oprot
+    self._seqid = 0
 
-  def eb_send_destroy_instance(self, f, seqid):
-    d = self._reqs.pop(seqid)
-    d.errback(f)
-    return d
+  def get_provider_hash(self, provider):
+    """
+    Parameters:
+     - provider
+    """
+    self.send_get_provider_hash(provider)
+    return self.recv_get_provider_hash()
 
-  def send_destroy_instance(self, provider_hash, identity_hash, instance_uuid):
-    oprot = self._oprot_factory.getProtocol(self._transport)
-    oprot.writeMessageBegin('destroy_instance', TMessageType.CALL, self._seqid)
-    args = destroy_instance_args()
-    args.provider_hash = provider_hash
-    args.identity_hash = identity_hash
-    args.instance_uuid = instance_uuid
-    args.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
+  def send_get_provider_hash(self, provider):
+    self._oprot.writeMessageBegin('get_provider_hash', TMessageType.CALL, self._seqid)
+    args = get_provider_hash_args()
+    args.provider = provider
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
 
-  def recv_destroy_instance(self, iprot, mtype, rseqid):
-    d = self._reqs.pop(rseqid)
+  def recv_get_provider_hash(self):
+    iprot = self._iprot
+    (fname, mtype, rseqid) = iprot.readMessageBegin()
     if mtype == TMessageType.EXCEPTION:
       x = TApplicationException()
       x.read(iprot)
       iprot.readMessageEnd()
-      return d.errback(x)
+      raise x
+    result = get_provider_hash_result()
+    result.read(iprot)
+    iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "get_provider_hash failed: unknown result");
+
+  def get_identity_hash(self, identity):
+    """
+    Parameters:
+     - identity
+    """
+    self.send_get_identity_hash(identity)
+    return self.recv_get_identity_hash()
+
+  def send_get_identity_hash(self, identity):
+    self._oprot.writeMessageBegin('get_identity_hash', TMessageType.CALL, self._seqid)
+    args = get_identity_hash_args()
+    args.identity = identity
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_get_identity_hash(self):
+    iprot = self._iprot
+    (fname, mtype, rseqid) = iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(iprot)
+      iprot.readMessageEnd()
+      raise x
+    result = get_identity_hash_result()
+    result.read(iprot)
+    iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "get_identity_hash failed: unknown result");
+
+  def get_instance(self, provider_hash, identity_hash, instance_uuid):
+    """
+    Parameters:
+     - provider_hash
+     - identity_hash
+     - instance_uuid
+    """
+    self.send_get_instance(provider_hash, identity_hash, instance_uuid)
+    return self.recv_get_instance()
+
+  def send_get_instance(self, provider_hash, identity_hash, instance_uuid):
+    self._oprot.writeMessageBegin('get_instance', TMessageType.CALL, self._seqid)
+    args = get_instance_args()
+    args.provider_hash = provider_hash
+    args.identity_hash = identity_hash
+    args.instance_uuid = instance_uuid
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_get_instance(self):
+    iprot = self._iprot
+    (fname, mtype, rseqid) = iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(iprot)
+      iprot.readMessageEnd()
+      raise x
+    result = get_instance_result()
+    result.read(iprot)
+    iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "get_instance failed: unknown result");
+
+  def list_instances(self, provider_hash, identity_hash):
+    """
+    Parameters:
+     - provider_hash
+     - identity_hash
+    """
+    self.send_list_instances(provider_hash, identity_hash)
+    return self.recv_list_instances()
+
+  def send_list_instances(self, provider_hash, identity_hash):
+    self._oprot.writeMessageBegin('list_instances', TMessageType.CALL, self._seqid)
+    args = list_instances_args()
+    args.provider_hash = provider_hash
+    args.identity_hash = identity_hash
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_list_instances(self):
+    iprot = self._iprot
+    (fname, mtype, rseqid) = iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(iprot)
+      iprot.readMessageEnd()
+      raise x
+    result = list_instances_result()
+    result.read(iprot)
+    iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    if result.oex is not None:
+      raise result.oex
+    if result.cex is not None:
+      raise result.cex
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "list_instances failed: unknown result");
+
+  def create_instance(self, provider_hash, identity_hash, options):
+    """
+    Parameters:
+     - provider_hash
+     - identity_hash
+     - options
+    """
+    self.send_create_instance(provider_hash, identity_hash, options)
+    return self.recv_create_instance()
+
+  def send_create_instance(self, provider_hash, identity_hash, options):
+    self._oprot.writeMessageBegin('create_instance', TMessageType.CALL, self._seqid)
+    args = create_instance_args()
+    args.provider_hash = provider_hash
+    args.identity_hash = identity_hash
+    args.options = options
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_create_instance(self):
+    iprot = self._iprot
+    (fname, mtype, rseqid) = iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(iprot)
+      iprot.readMessageEnd()
+      raise x
+    result = create_instance_result()
+    result.read(iprot)
+    iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "create_instance failed: unknown result");
+
+  def deploy_to_instance(self, provider_hash, identity_hash, options):
+    """
+    Parameters:
+     - provider_hash
+     - identity_hash
+     - options
+    """
+    self.send_deploy_to_instance(provider_hash, identity_hash, options)
+    return self.recv_deploy_to_instance()
+
+  def send_deploy_to_instance(self, provider_hash, identity_hash, options):
+    self._oprot.writeMessageBegin('deploy_to_instance', TMessageType.CALL, self._seqid)
+    args = deploy_to_instance_args()
+    args.provider_hash = provider_hash
+    args.identity_hash = identity_hash
+    args.options = options
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_deploy_to_instance(self):
+    iprot = self._iprot
+    (fname, mtype, rseqid) = iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(iprot)
+      iprot.readMessageEnd()
+      raise x
+    result = deploy_to_instance_result()
+    result.read(iprot)
+    iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    if result.oex is not None:
+      raise result.oex
+    if result.cex is not None:
+      raise result.cex
+    if result.dex is not None:
+      raise result.dex
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "deploy_to_instance failed: unknown result");
+
+  def destroy_instance(self, provider_hash, identity_hash, instance_uuid):
+    """
+    Parameters:
+     - provider_hash
+     - identity_hash
+     - instance_uuid
+    """
+    self.send_destroy_instance(provider_hash, identity_hash, instance_uuid)
+    self.recv_destroy_instance()
+
+  def send_destroy_instance(self, provider_hash, identity_hash, instance_uuid):
+    self._oprot.writeMessageBegin('destroy_instance', TMessageType.CALL, self._seqid)
+    args = destroy_instance_args()
+    args.provider_hash = provider_hash
+    args.identity_hash = identity_hash
+    args.instance_uuid = instance_uuid
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_destroy_instance(self):
+    iprot = self._iprot
+    (fname, mtype, rseqid) = iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(iprot)
+      iprot.readMessageEnd()
+      raise x
     result = destroy_instance_result()
     result.read(iprot)
     iprot.readMessageEnd()
     if result.oex is not None:
-      return d.errback(result.oex)
+      raise result.oex
     if result.cex is not None:
-      return d.errback(result.cex)
-    return d.callback(None)
+      raise result.cex
+    return
 
 
-class Processor(TProcessor):
-  implements(Iface)
-
+class Processor(Iface, TProcessor):
   def __init__(self, handler):
-    self._handler = Iface(handler)
+    self._handler = handler
     self._processMap = {}
     self._processMap["get_provider_hash"] = Processor.process_get_provider_hash
     self._processMap["get_identity_hash"] = Processor.process_get_identity_hash
@@ -473,21 +354,17 @@ class Processor(TProcessor):
       x.write(oprot)
       oprot.writeMessageEnd()
       oprot.trans.flush()
-      return defer.succeed(None)
+      return
     else:
-      return self._processMap[name](self, seqid, iprot, oprot)
+      self._processMap[name](self, seqid, iprot, oprot)
+    return True
 
   def process_get_provider_hash(self, seqid, iprot, oprot):
     args = get_provider_hash_args()
     args.read(iprot)
     iprot.readMessageEnd()
     result = get_provider_hash_result()
-    d = defer.maybeDeferred(self._handler.get_provider_hash, args.provider)
-    d.addCallback(self.write_results_success_get_provider_hash, result, seqid, oprot)
-    return d
-
-  def write_results_success_get_provider_hash(self, success, result, seqid, oprot):
-    result.success = success
+    result.success = self._handler.get_provider_hash(args.provider)
     oprot.writeMessageBegin("get_provider_hash", TMessageType.REPLY, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
@@ -498,12 +375,7 @@ class Processor(TProcessor):
     args.read(iprot)
     iprot.readMessageEnd()
     result = get_identity_hash_result()
-    d = defer.maybeDeferred(self._handler.get_identity_hash, args.identity)
-    d.addCallback(self.write_results_success_get_identity_hash, result, seqid, oprot)
-    return d
-
-  def write_results_success_get_identity_hash(self, success, result, seqid, oprot):
-    result.success = success
+    result.success = self._handler.get_identity_hash(args.identity)
     oprot.writeMessageBegin("get_identity_hash", TMessageType.REPLY, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
@@ -514,12 +386,7 @@ class Processor(TProcessor):
     args.read(iprot)
     iprot.readMessageEnd()
     result = get_instance_result()
-    d = defer.maybeDeferred(self._handler.get_instance, args.provider_hash, args.identity_hash, args.instance_uuid)
-    d.addCallback(self.write_results_success_get_instance, result, seqid, oprot)
-    return d
-
-  def write_results_success_get_instance(self, success, result, seqid, oprot):
-    result.success = success
+    result.success = self._handler.get_instance(args.provider_hash, args.identity_hash, args.instance_uuid)
     oprot.writeMessageBegin("get_instance", TMessageType.REPLY, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
@@ -530,21 +397,8 @@ class Processor(TProcessor):
     args.read(iprot)
     iprot.readMessageEnd()
     result = list_instances_result()
-    d = defer.maybeDeferred(self._handler.list_instances, args.provider_hash, args.identity_hash)
-    d.addCallback(self.write_results_success_list_instances, result, seqid, oprot)
-    d.addErrback(self.write_results_exception_list_instances, result, seqid, oprot)
-    return d
-
-  def write_results_success_list_instances(self, success, result, seqid, oprot):
-    result.success = success
-    oprot.writeMessageBegin("list_instances", TMessageType.REPLY, seqid)
-    result.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
-
-  def write_results_exception_list_instances(self, error, result, seqid, oprot):
     try:
-      error.raiseException()
+      result.success = self._handler.list_instances(args.provider_hash, args.identity_hash)
     except OpenStackException, oex:
       result.oex = oex
     except ConnectionException, cex:
@@ -559,12 +413,7 @@ class Processor(TProcessor):
     args.read(iprot)
     iprot.readMessageEnd()
     result = create_instance_result()
-    d = defer.maybeDeferred(self._handler.create_instance, args.provider_hash, args.identity_hash, args.options)
-    d.addCallback(self.write_results_success_create_instance, result, seqid, oprot)
-    return d
-
-  def write_results_success_create_instance(self, success, result, seqid, oprot):
-    result.success = success
+    result.success = self._handler.create_instance(args.provider_hash, args.identity_hash, args.options)
     oprot.writeMessageBegin("create_instance", TMessageType.REPLY, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
@@ -575,21 +424,8 @@ class Processor(TProcessor):
     args.read(iprot)
     iprot.readMessageEnd()
     result = deploy_to_instance_result()
-    d = defer.maybeDeferred(self._handler.deploy_to_instance, args.provider_hash, args.identity_hash, args.options)
-    d.addCallback(self.write_results_success_deploy_to_instance, result, seqid, oprot)
-    d.addErrback(self.write_results_exception_deploy_to_instance, result, seqid, oprot)
-    return d
-
-  def write_results_success_deploy_to_instance(self, success, result, seqid, oprot):
-    result.success = success
-    oprot.writeMessageBegin("deploy_to_instance", TMessageType.REPLY, seqid)
-    result.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
-
-  def write_results_exception_deploy_to_instance(self, error, result, seqid, oprot):
     try:
-      error.raiseException()
+      result.success = self._handler.deploy_to_instance(args.provider_hash, args.identity_hash, args.options)
     except OpenStackException, oex:
       result.oex = oex
     except ConnectionException, cex:
@@ -606,21 +442,8 @@ class Processor(TProcessor):
     args.read(iprot)
     iprot.readMessageEnd()
     result = destroy_instance_result()
-    d = defer.maybeDeferred(self._handler.destroy_instance, args.provider_hash, args.identity_hash, args.instance_uuid)
-    d.addCallback(self.write_results_success_destroy_instance, result, seqid, oprot)
-    d.addErrback(self.write_results_exception_destroy_instance, result, seqid, oprot)
-    return d
-
-  def write_results_success_destroy_instance(self, success, result, seqid, oprot):
-    result.success = success
-    oprot.writeMessageBegin("destroy_instance", TMessageType.REPLY, seqid)
-    result.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
-
-  def write_results_exception_destroy_instance(self, error, result, seqid, oprot):
     try:
-      error.raiseException()
+      self._handler.destroy_instance(args.provider_hash, args.identity_hash, args.instance_uuid)
     except OpenStackException, oex:
       result.oex = oex
     except ConnectionException, cex:
