@@ -11,11 +11,20 @@ CHOWN	=	chown
 USER	=	root
 GROUP	=	root
 GENLANG	=	py
+GENOPT 	=	new_style,utf8strings
 ifdef GENTYPE
-	GENNAME = $(GENLANG):$(GENTYPE)
+	ifdef GENOPT
+		GENNAME = $(GENLANG):$(GENTYPE),$(GENOPT)
+	else
+		GENNAME = $(GENLANG):$(GENTYPE)
+	endif
 	GENDIR	= gen-$(GENLANG).$(GENTYPE)
 else
-	GENNAME = $(GENLANG)
+	ifdef GENOPT
+		GENNAME = $(GENLANG):$(GENOPT)
+	else
+		GENNAME = $(GENLANG)
+	endif
 	GENDIR = gen-$(GENLANG)
 endif
 

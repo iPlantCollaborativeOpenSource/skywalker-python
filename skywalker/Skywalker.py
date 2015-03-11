@@ -3,7 +3,7 @@
 #
 # DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
 #
-#  options string: py
+#  options string: py:new_style,utf8strings
 #
 
 from thrift.Thrift import TType, TMessageType, TException, TApplicationException
@@ -17,7 +17,7 @@ except:
   fastbinary = None
 
 
-class Iface:
+class Iface(object):
   def get_provider_hash(self, provider):
     """
     Parameters:
@@ -456,7 +456,7 @@ class Processor(Iface, TProcessor):
 
 # HELPER FUNCTIONS AND STRUCTURES
 
-class get_provider_hash_args:
+class get_provider_hash_args(object):
   """
   Attributes:
    - provider
@@ -522,7 +522,7 @@ class get_provider_hash_args:
   def __ne__(self, other):
     return not (self == other)
 
-class get_provider_hash_result:
+class get_provider_hash_result(object):
   """
   Attributes:
    - success
@@ -546,7 +546,7 @@ class get_provider_hash_result:
         break
       if fid == 0:
         if ftype == TType.STRING:
-          self.success = iprot.readString();
+          self.success = iprot.readString().decode('utf-8')
         else:
           iprot.skip(ftype)
       else:
@@ -561,7 +561,7 @@ class get_provider_hash_result:
     oprot.writeStructBegin('get_provider_hash_result')
     if self.success is not None:
       oprot.writeFieldBegin('success', TType.STRING, 0)
-      oprot.writeString(self.success)
+      oprot.writeString(self.success.encode('utf-8'))
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -586,7 +586,7 @@ class get_provider_hash_result:
   def __ne__(self, other):
     return not (self == other)
 
-class get_identity_hash_args:
+class get_identity_hash_args(object):
   """
   Attributes:
    - identity
@@ -652,7 +652,7 @@ class get_identity_hash_args:
   def __ne__(self, other):
     return not (self == other)
 
-class get_identity_hash_result:
+class get_identity_hash_result(object):
   """
   Attributes:
    - success
@@ -676,7 +676,7 @@ class get_identity_hash_result:
         break
       if fid == 0:
         if ftype == TType.STRING:
-          self.success = iprot.readString();
+          self.success = iprot.readString().decode('utf-8')
         else:
           iprot.skip(ftype)
       else:
@@ -691,7 +691,7 @@ class get_identity_hash_result:
     oprot.writeStructBegin('get_identity_hash_result')
     if self.success is not None:
       oprot.writeFieldBegin('success', TType.STRING, 0)
-      oprot.writeString(self.success)
+      oprot.writeString(self.success.encode('utf-8'))
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -716,7 +716,7 @@ class get_identity_hash_result:
   def __ne__(self, other):
     return not (self == other)
 
-class get_instance_args:
+class get_instance_args(object):
   """
   Attributes:
    - provider_hash
@@ -747,17 +747,17 @@ class get_instance_args:
         break
       if fid == 1:
         if ftype == TType.STRING:
-          self.provider_hash = iprot.readString();
+          self.provider_hash = iprot.readString().decode('utf-8')
         else:
           iprot.skip(ftype)
       elif fid == 2:
         if ftype == TType.STRING:
-          self.identity_hash = iprot.readString();
+          self.identity_hash = iprot.readString().decode('utf-8')
         else:
           iprot.skip(ftype)
       elif fid == 3:
         if ftype == TType.STRING:
-          self.instance_uuid = iprot.readString();
+          self.instance_uuid = iprot.readString().decode('utf-8')
         else:
           iprot.skip(ftype)
       else:
@@ -772,15 +772,15 @@ class get_instance_args:
     oprot.writeStructBegin('get_instance_args')
     if self.provider_hash is not None:
       oprot.writeFieldBegin('provider_hash', TType.STRING, 1)
-      oprot.writeString(self.provider_hash)
+      oprot.writeString(self.provider_hash.encode('utf-8'))
       oprot.writeFieldEnd()
     if self.identity_hash is not None:
       oprot.writeFieldBegin('identity_hash', TType.STRING, 2)
-      oprot.writeString(self.identity_hash)
+      oprot.writeString(self.identity_hash.encode('utf-8'))
       oprot.writeFieldEnd()
     if self.instance_uuid is not None:
       oprot.writeFieldBegin('instance_uuid', TType.STRING, 3)
-      oprot.writeString(self.instance_uuid)
+      oprot.writeString(self.instance_uuid.encode('utf-8'))
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -807,7 +807,7 @@ class get_instance_args:
   def __ne__(self, other):
     return not (self == other)
 
-class get_instance_result:
+class get_instance_result(object):
   """
   Attributes:
    - success
@@ -872,7 +872,7 @@ class get_instance_result:
   def __ne__(self, other):
     return not (self == other)
 
-class list_instances_args:
+class list_instances_args(object):
   """
   Attributes:
    - provider_hash
@@ -900,12 +900,12 @@ class list_instances_args:
         break
       if fid == 1:
         if ftype == TType.STRING:
-          self.provider_hash = iprot.readString();
+          self.provider_hash = iprot.readString().decode('utf-8')
         else:
           iprot.skip(ftype)
       elif fid == 2:
         if ftype == TType.STRING:
-          self.identity_hash = iprot.readString();
+          self.identity_hash = iprot.readString().decode('utf-8')
         else:
           iprot.skip(ftype)
       else:
@@ -920,11 +920,11 @@ class list_instances_args:
     oprot.writeStructBegin('list_instances_args')
     if self.provider_hash is not None:
       oprot.writeFieldBegin('provider_hash', TType.STRING, 1)
-      oprot.writeString(self.provider_hash)
+      oprot.writeString(self.provider_hash.encode('utf-8'))
       oprot.writeFieldEnd()
     if self.identity_hash is not None:
       oprot.writeFieldBegin('identity_hash', TType.STRING, 2)
-      oprot.writeString(self.identity_hash)
+      oprot.writeString(self.identity_hash.encode('utf-8'))
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -950,7 +950,7 @@ class list_instances_args:
   def __ne__(self, other):
     return not (self == other)
 
-class list_instances_result:
+class list_instances_result(object):
   """
   Attributes:
    - success
@@ -1043,7 +1043,7 @@ class list_instances_result:
   def __ne__(self, other):
     return not (self == other)
 
-class create_instance_args:
+class create_instance_args(object):
   """
   Attributes:
    - provider_hash
@@ -1074,12 +1074,12 @@ class create_instance_args:
         break
       if fid == 1:
         if ftype == TType.STRING:
-          self.provider_hash = iprot.readString();
+          self.provider_hash = iprot.readString().decode('utf-8')
         else:
           iprot.skip(ftype)
       elif fid == 2:
         if ftype == TType.STRING:
-          self.identity_hash = iprot.readString();
+          self.identity_hash = iprot.readString().decode('utf-8')
         else:
           iprot.skip(ftype)
       elif fid == 3:
@@ -1087,8 +1087,8 @@ class create_instance_args:
           self.options = {}
           (_ktype40, _vtype41, _size39 ) = iprot.readMapBegin()
           for _i43 in xrange(_size39):
-            _key44 = iprot.readString();
-            _val45 = iprot.readString();
+            _key44 = iprot.readString().decode('utf-8')
+            _val45 = iprot.readString().decode('utf-8')
             self.options[_key44] = _val45
           iprot.readMapEnd()
         else:
@@ -1105,18 +1105,18 @@ class create_instance_args:
     oprot.writeStructBegin('create_instance_args')
     if self.provider_hash is not None:
       oprot.writeFieldBegin('provider_hash', TType.STRING, 1)
-      oprot.writeString(self.provider_hash)
+      oprot.writeString(self.provider_hash.encode('utf-8'))
       oprot.writeFieldEnd()
     if self.identity_hash is not None:
       oprot.writeFieldBegin('identity_hash', TType.STRING, 2)
-      oprot.writeString(self.identity_hash)
+      oprot.writeString(self.identity_hash.encode('utf-8'))
       oprot.writeFieldEnd()
     if self.options is not None:
       oprot.writeFieldBegin('options', TType.MAP, 3)
       oprot.writeMapBegin(TType.STRING, TType.STRING, len(self.options))
       for kiter46,viter47 in self.options.items():
-        oprot.writeString(kiter46)
-        oprot.writeString(viter47)
+        oprot.writeString(kiter46.encode('utf-8'))
+        oprot.writeString(viter47.encode('utf-8'))
       oprot.writeMapEnd()
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
@@ -1144,7 +1144,7 @@ class create_instance_args:
   def __ne__(self, other):
     return not (self == other)
 
-class create_instance_result:
+class create_instance_result(object):
   """
   Attributes:
    - success
@@ -1209,7 +1209,7 @@ class create_instance_result:
   def __ne__(self, other):
     return not (self == other)
 
-class deploy_to_instance_args:
+class deploy_to_instance_args(object):
   """
   Attributes:
    - provider_hash
@@ -1240,12 +1240,12 @@ class deploy_to_instance_args:
         break
       if fid == 1:
         if ftype == TType.STRING:
-          self.provider_hash = iprot.readString();
+          self.provider_hash = iprot.readString().decode('utf-8')
         else:
           iprot.skip(ftype)
       elif fid == 2:
         if ftype == TType.STRING:
-          self.identity_hash = iprot.readString();
+          self.identity_hash = iprot.readString().decode('utf-8')
         else:
           iprot.skip(ftype)
       elif fid == 3:
@@ -1253,8 +1253,8 @@ class deploy_to_instance_args:
           self.options = {}
           (_ktype49, _vtype50, _size48 ) = iprot.readMapBegin()
           for _i52 in xrange(_size48):
-            _key53 = iprot.readString();
-            _val54 = iprot.readString();
+            _key53 = iprot.readString().decode('utf-8')
+            _val54 = iprot.readString().decode('utf-8')
             self.options[_key53] = _val54
           iprot.readMapEnd()
         else:
@@ -1271,18 +1271,18 @@ class deploy_to_instance_args:
     oprot.writeStructBegin('deploy_to_instance_args')
     if self.provider_hash is not None:
       oprot.writeFieldBegin('provider_hash', TType.STRING, 1)
-      oprot.writeString(self.provider_hash)
+      oprot.writeString(self.provider_hash.encode('utf-8'))
       oprot.writeFieldEnd()
     if self.identity_hash is not None:
       oprot.writeFieldBegin('identity_hash', TType.STRING, 2)
-      oprot.writeString(self.identity_hash)
+      oprot.writeString(self.identity_hash.encode('utf-8'))
       oprot.writeFieldEnd()
     if self.options is not None:
       oprot.writeFieldBegin('options', TType.MAP, 3)
       oprot.writeMapBegin(TType.STRING, TType.STRING, len(self.options))
       for kiter55,viter56 in self.options.items():
-        oprot.writeString(kiter55)
-        oprot.writeString(viter56)
+        oprot.writeString(kiter55.encode('utf-8'))
+        oprot.writeString(viter56.encode('utf-8'))
       oprot.writeMapEnd()
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
@@ -1310,7 +1310,7 @@ class deploy_to_instance_args:
   def __ne__(self, other):
     return not (self == other)
 
-class deploy_to_instance_result:
+class deploy_to_instance_result(object):
   """
   Attributes:
    - success
@@ -1416,7 +1416,7 @@ class deploy_to_instance_result:
   def __ne__(self, other):
     return not (self == other)
 
-class destroy_instance_args:
+class destroy_instance_args(object):
   """
   Attributes:
    - provider_hash
@@ -1447,17 +1447,17 @@ class destroy_instance_args:
         break
       if fid == 1:
         if ftype == TType.STRING:
-          self.provider_hash = iprot.readString();
+          self.provider_hash = iprot.readString().decode('utf-8')
         else:
           iprot.skip(ftype)
       elif fid == 2:
         if ftype == TType.STRING:
-          self.identity_hash = iprot.readString();
+          self.identity_hash = iprot.readString().decode('utf-8')
         else:
           iprot.skip(ftype)
       elif fid == 3:
         if ftype == TType.STRING:
-          self.instance_uuid = iprot.readString();
+          self.instance_uuid = iprot.readString().decode('utf-8')
         else:
           iprot.skip(ftype)
       else:
@@ -1472,15 +1472,15 @@ class destroy_instance_args:
     oprot.writeStructBegin('destroy_instance_args')
     if self.provider_hash is not None:
       oprot.writeFieldBegin('provider_hash', TType.STRING, 1)
-      oprot.writeString(self.provider_hash)
+      oprot.writeString(self.provider_hash.encode('utf-8'))
       oprot.writeFieldEnd()
     if self.identity_hash is not None:
       oprot.writeFieldBegin('identity_hash', TType.STRING, 2)
-      oprot.writeString(self.identity_hash)
+      oprot.writeString(self.identity_hash.encode('utf-8'))
       oprot.writeFieldEnd()
     if self.instance_uuid is not None:
       oprot.writeFieldBegin('instance_uuid', TType.STRING, 3)
-      oprot.writeString(self.instance_uuid)
+      oprot.writeString(self.instance_uuid.encode('utf-8'))
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -1507,7 +1507,7 @@ class destroy_instance_args:
   def __ne__(self, other):
     return not (self == other)
 
-class destroy_instance_result:
+class destroy_instance_result(object):
   """
   Attributes:
    - oex
